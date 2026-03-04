@@ -31,15 +31,12 @@ def clean_text(text):
 # =============================
 # UI
 # =============================
-st.title("🎓 Student Academic Status Prediction")
+st.title("🎓 Đoán mức độ cảnh báo học vụ")
 
-age = st.number_input("Age", 15, 60, 20)
-tuition_debt = st.number_input("Tuition Debt", 0.0, 100000000.0, 0.0)
-count_f = st.number_input("Count F", 0, 20, 0)
-training_score = st.number_input("Training Score", 0.0, 100.0, 50.0)
-
-advisor_notes = st.text_area("Advisor Notes")
-personal_essay = st.text_area("Personal Essay")
+age = st.number_input("Tuổi", 15, 60, 20)
+tuition_debt = st.number_input("Nợ học phí", 0.0, 100000000.0, 0.0)
+count_f = st.number_input("Số môn trượt", 0, 20, 0)
+training_score = st.number_input("Điểm bài kiếm tra", 0.0, 100.0, 50.0)
 
 if st.button("Predict"):
 
@@ -51,7 +48,7 @@ if st.button("Predict"):
         "Training_Score_Mixed": [training_score],
     })
 
-    # Add engineered features (đơn giản demo)
+    # Add engineered features 
     input_df["num_subjects_taken"] = 5
     input_df["attendance_mean"] = 10
     input_df["low_attendance_count"] = 1
@@ -59,14 +56,6 @@ if st.button("Predict"):
     input_df["attendance_ratio"] = 10/16
     input_df["attendance_score"] = 10*5
 
-    # ===== Text =====
-    text_all = clean_text(advisor_notes) + " " + clean_text(personal_essay)
-    input_df["text_all"] = text_all
-
-    X_text = tfidf.transform(input_df["text_all"])
-    X_tab = input_df[num_features]
-
-    X = hstack([X_text, X_tab])
 
     # ===== Ensemble predict =====
     probs = np.mean(
